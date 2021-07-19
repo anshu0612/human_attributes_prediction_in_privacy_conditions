@@ -1,4 +1,4 @@
-### ACM MM'21: Human Attributes Prediction UNder Privacy-preserving Conditions
+### ACM MM'21: Human Attributes Prediction Under Privacy-preserving Conditions
 
 We built the Context-guided Human Attributes Prediction Network (CHAPNet) guided by out human findings. We utilized the psychophysics observations for emotion, age, and gender prediction to design CHAPNet, an end-to-end multi-tasking human attributes classification depp learning model. The advantage of basing our model design on human behaviour is that it makes the network architecture explainable.
 
@@ -15,35 +15,40 @@ Paper: Human Attributes Prediction Uuder Privacy-preserving Conditions, accepted
 ## Content
 
 <!-- toc -->
-- [Arguments](#arguments)
-- [Dependencies](#features)
-- [](#)
+- [Usage](#usage)
+  - [Training Samples](training-samples)
+  - [Testing Sample](training-sample)
+- [Setup](#setup)
+  - [Dependencies](dependencies)
+  - [Expected directory structure of the data](expected-directory-structure-of-the-data)
+  - [Diversity in Context and People Dataset](diversity-in-context-and-people-dataset)
+  - [Pose generation](pose-generation)
 - [Contact](#contact)
 - [References](#references)
-<!-- - [Citation](#citation) -->
 - [License](#license)
 <!-- tocstop -->
+<!-- - [Citation](#citation) -->
 
 ## Usage
 
-Training
+### Training Samples
 
 ```bash
 #training with default settings on gpu_device 1 if GPU is available
 python3 train.py --gpu_device 1
 
-#training on images with head obfuscation for all people   
-python3 train.py --ob_face_region heads --ob_people AO 
+#training on images with head obfuscation of only the targets    
+python3 train.py --ob_face_region head --ob_people TO 
 
-#training on images with all the faces obfuscated (default ob_face_region argument = 'face')
+#training on images with all the detected faces obfuscated (default ob_face_region = 'face')
 python3 train.py --ob_people AO 
 
-#training on images with all the faces obfuscated (default ob_face_region argument = 'face')
-python3 train.py --ob_people AO 
+#training on images with all the detected faces' eyes region obfuscated (default ob_people  = 'AO')
+python3 train.py --ob_face_region eye 
 
 ```
 
-## Arguments
+**Arguments**
 
 | Argument | Description | Default
 | ---- | --- | --- |
@@ -55,7 +60,25 @@ python3 train.py --ob_people AO
 | ob_people | Set whether to obfuscate all the detected faces (AO) or only the targets (TO). Valid values are { None, TO, AO } | None |
 | gpu_device | Set the GPU device to train the model on | 0 |
 
+### Testing Sample
+
+```bash
+python3 test.py --cp_path "/cp_DPAC_face_AO/29.pth" --gpu_device 0
+```
+
+**Arguments**
+
+| Argument | Description | Default
+| ---- | --- | --- |
+| cp_path | Set the path to the setpoint | - |
+| gpu_device | Set the GPU device to train the model on | 0 |
+
 ## Setup
+
+### Dependencies
+
+- PyTorch: > 1.7.1
+- Python: > 3.6
 
 ### Expected directory structure of the data
 
@@ -84,44 +107,24 @@ python3 train.py --ob_people AO
 ......
 ```
 
-### Diversity in Context and People Dataset (DPaC)
+### Diversity in Context and People Dataset
 
-Out dataset with images containing obfuscated faces are available [online](https://bit.ly/3ak6uVE). Dataset with images of intact faces can be provided upon request.
+Out Diversity in Context and People Dataset (DPaC) dataset with images containing obfuscated `faces` are available [online](https://bit.ly/3ak6uVE). The dataset with images of intact faces and other face obfuscations can be provided upon request.
 
-### Pose generation 
+### Pose generation
 
-Pose folder expects .npy file of pose guided heatmaps for each image.
+The `pose` folder in the above directory structure expects `.npy` files of pose guided heatmaps generated for each image.
 
-Steps to  generate them:  
+Steps to generate them:  
 
-1. For cropped target pose landmarks generation use:
+1. Get the cropped targets `images` using the `body_bb`.
+2. Generate a `.json` file containing pose landmarks for each of the cropped targets using [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) library.
+3. Generate heatmaps `.npy` files for each of the cropped targets by running the file `generate_heatmaps.py` in `utils` folder.
 
-https://github.com/CMU-Perceptual-Computing-Lab/openpose
-
-It will generate the pose landmarks json 
-
-2. For heatmaps generation use the use the generate_heatmaps.py file.
-
+Sample to run `generate_heatmaps.py`:
 ```bash
 python3 generate_heatmaps.py --cropped_targets_imgs_path "/targets/" --pose_data_path '/pose_landmarks.json' --save_path '/pose/' 
 ```
-
-### Pose heatmaps generation
-
-## Dependencies
-
-PyTorch: > 1.7.1
-Python: > 3.6
-
-Testing
-
-```bash
-python3 test.py --cp_path "//" --gpu_device 0
-```
-
-
-
-
 
 <!-- 
 ## Citation
@@ -143,8 +146,8 @@ If you have any questions, feel free to open an issue or directly contact me via
 ## References
 
 **Pose-guided target branch inspired by**:
-Miao, Jiaxu, et al. "Pose-guided feature alignment for occluded person re-identification." Proceedings of the IEEE/CVF International Conference on Computer Vision. 2019.
+Miao, Jiaxu, et al. "[Pose-guided feature alignment for occluded person re-identification.](https://openaccess.thecvf.com/content_ICCV_2019/html/Miao_Pose-Guided_Feature_Alignment_for_Occluded_Person_Re-Identification_ICCV_2019_paper.html)" Proceedings of the IEEE/CVF International Conference on Computer Vision. 2019.
 
 ## License
 
-PyTorch has a BSD-style license, as found in the [LICENSE](LICENSE) file.
+MIT license, as found in the [LICENSE](LICENSE) file.
