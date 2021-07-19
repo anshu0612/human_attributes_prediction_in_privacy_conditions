@@ -1,0 +1,12 @@
+/venv
+.DS_Store
+/.idea
+/cp*/
+/*.pyc
+**/*.swp
+**/__pycache__
+/places
+/*.jpg
+/*.py.swp
+/models/places/
+/.vscode/
