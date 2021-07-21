@@ -4,10 +4,10 @@ import argparse
 import numpy as np
 from rich import print
 
-from constants import DPAC_ATT_CAT_COUNT
-from dataloader import load_data
-from models.base import MultiOutputModel
-# from loss import MultiTaskLoss_DPAC
+from constants import IOG_ATT_CAT_COUNT
+from dataloader_iog import load_data
+from models.base_iog import MultiOutputModel
+# from loss import MultiTaskLoss_IOG
 
 from sklearn.metrics import precision_score, f1_score, recall_score, accuracy_score
 
@@ -17,8 +17,7 @@ def _net_output_to_predictions(output):
     '''
     _, predicted_age = output['age'].cpu().max(1)
     _, predicted_gender = output['gender'].cpu().max(1)
-    _, predicted_emotion = output['emotion'].cpu().max(1)
-    return predicted_age.numpy().tolist(), predicted_gender.numpy().tolist(), predicted_emotion.numpy().tolist()
+    return predicted_age.numpy().tolist(), predicted_gender.numpy().tolist()
 
 
 def _model_checkpoint_load(model, name):
@@ -36,9 +35,6 @@ def _calculate_metrics(target, output):
 
     predicted_gender = output['gender']
     gt_gender = target['gender']
-
-    predicted_emotion = output['emotion']
-    gt_emotion = target['emotion']
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -60,23 +56,14 @@ def _calculate_metrics(target, output):
         accuracy_gender = accuracy_score(
             y_true=gt_gender, y_pred=predicted_gender)
 
-        recall_emotion = recall_score(
-            y_true=gt_emotion, y_pred=predicted_emotion, average='weighted')
-        precision_emotion = precision_score(
-            y_true=gt_emotion, y_pred=predicted_emotion, average='weighted')
-        f1_emotion = f1_score(
-            y_true=gt_emotion, y_pred=predicted_emotion, average='weighted')
-        accuracy_emotion = accuracy_score(
-            y_true=gt_emotion, y_pred=predicted_emotion)
-
-    print("Accuracy Age: {:.4f}, Gender: {:.4f}, Emotion: {:.4f}".format(
-        accuracy_age, accuracy_gender, accuracy_emotion))
-    print("Precision Age: {:.4f}, Gender: {:.4f}, Emotion: {:.4f}".format(
-        precision_age,  precision_gender, precision_emotion))
-    print("Recall Age: {:.4f}, Gender: {:.4f}, Emotion: {:.4f}".format(
-        recall_age, recall_gender, recall_emotion))
-    print("F1 Age: {:.4f}, Gender: {:.4f}, Emotion: {:.4f}".format(
-        f1_age, f1_gender, f1_emotion))
+    print("Accuracy Age: {:.4f}, Gender: {:.4f}".format(
+        accuracy_age, accuracy_gender))
+    print("Precision Age: {:.4f}, Gender: {:.4f}".format(
+        precision_age,  precision_gender))
+    print("Recall Age: {:.4f}, Gender: {:.4f}".format(
+        recall_age, recall_gender))
+    print("F1 Age: {:.4f}, Gender: {:.4f}".format(
+        f1_age, f1_gender))
 
 
 def test(checkpoint=None, gpu_device=0):
@@ -84,10 +71,10 @@ def test(checkpoint=None, gpu_device=0):
     '''
     device = torch.device("cuda:" + str(gpu_device)
                           if torch.cuda.is_available() else "cpu")
-    # loss = MultiTaskLoss_DPAC()
+    # loss = MultiTaskLoss_IOG()
 
-    model = MultiOutputModel(device, n_age_cat=DPAC_ATT_CAT_COUNT['age'],
-                             n_gender_cat=DPAC_ATT_CAT_COUNT['gender'], n_emotion_cat=DPAC_ATT_CAT_COUNT['emotion'])
+    model = MultiOutputModel(device, n_age_cat=IOG_ATT_CAT_COUNT['age'],
+                             n_gender_cat=IOG_ATT_CAT_COUNT['gender'])
     model.to(device)
 
     test_dataloader = load_data(batch_size=16, datatype='test')
@@ -99,11 +86,9 @@ def test(checkpoint=None, gpu_device=0):
 
     age_predictions = []
     gender_predictions = []
-    emotion_predictions = []
 
     age_labels = []
     gender_labels = []
-    emotion_labels = []
 
     with torch.no_grad():
         for batch in test_dataloader:
@@ -117,22 +102,19 @@ def test(checkpoint=None, gpu_device=0):
             output = model(context, target, target_pose)
             # _train, val_train_losses = loss(output, target_labels)
             (batch_age_predictions,
-             batch_gender_predictions, batch_emotion_predictions) = _net_output_to_predictions(output)
+             batch_gender_predictions) = _net_output_to_predictions(output)
 
-            emotion_labels.extend(
-                target_att_labels['emotion'].cpu().numpy().tolist())
             age_labels.extend(target_att_labels['age'].cpu().numpy().tolist())
             gender_labels.extend(
                 target_att_labels['gender'].cpu().numpy().tolist())
 
             age_predictions.extend(batch_age_predictions)
             gender_predictions.extend(batch_gender_predictions)
-            emotion_predictions.extend(batch_emotion_predictions)
 
     target_dict = {"age": np.asarray(age_labels), "gender": np.asarray(
-        gender_labels), "emotion": np.asarray(emotion_labels), }
+        gender_labels)}
     output_dict = {"age": np.asarray(age_predictions), "gender": np.asarray(
-        gender_predictions), "emotion": np.asarray(emotion_predictions)}
+        gender_predictions)}
 
     _calculate_metrics(target_dict, output_dict)
 

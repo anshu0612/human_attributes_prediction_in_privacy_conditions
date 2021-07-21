@@ -1,6 +1,6 @@
 ### ACM MM'21: Human Attributes Prediction Under Privacy-preserving Conditions
 
-We built the Context-guided Human Attributes Prediction Network (CHAPNet) guided by out human findings. We utilized the psychophysics observations for emotion, age, and gender prediction to design CHAPNet, an end-to-end multi-tasking human attributes classification depp learning model. The advantage of basing our model design on human behaviour is that it makes the network architecture explainable.
+We built the Context-guided Human Attributes Prediction Network (CHAPNet) guided by out human findings. We utilized the psychophysics observations for emotion, age, and gender prediction to design CHAPNet, an end-to-end multi-tasking human attributes classification deep learning model. The advantage of basing our model design on human behaviour is that it makes the network architecture explainable.
 
 ![Model](https://chapnetgit.s3.ap-southeast-1.amazonaws.com/Model_v3.jpg)
 
@@ -43,7 +43,7 @@ python3 train.py --ob_face_region head --ob_people TO
 #training on images with all the detected faces obfuscated (default ob_face_region = 'face')
 python3 train.py --ob_people AO 
 
-#training on images with all the detected faces' eyes region obfuscated (default ob_people  = 'AO')
+#training on images with all the detected faces' eyes regions obfuscated (default ob_people  = 'AO')
 python3 train.py --ob_face_region eye 
 
 ```
@@ -85,7 +85,7 @@ python3 test.py --cp_path "/cp_DPAC_face_AO/29.pth" --gpu_device 0
 ```
 ├── data
 │   ├── data.json
-│   ├── splits.json
+│   ├── train_test_split.json
 │   ├── privacy
 │   |    ├── eye 
 |   |    |     ├── images 

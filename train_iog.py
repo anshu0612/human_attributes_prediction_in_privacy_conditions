@@ -6,11 +6,11 @@ from rich import print
 import torch
 import torch.nn as nn
 
-from dataloader import load_data
-from models.base import MultiOutputModel
-from loss import MultiTaskLoss_DPAC
+from dataloader_iog import load_data
+from models.base_iog import MultiOutputModel
+from loss import MultiTaskLoss_IOG
 
-from constants import DPAC_ATT_CAT_COUNT
+from constants import IOG_ATT_CAT_COUNT
 
 torch.backends.cudnn.benchmark = True
 torch.manual_seed(1)
@@ -42,14 +42,13 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
     print("cuda is_available:", torch.cuda.is_available())
     print("cuda current_device", torch.cuda.current_device())
     
-    train_dataloader = load_data(
-        batch_size, ob_face_region, ob_people, 'train')
+    train_dataloader = load_data(batch_size, ob_face_region, ob_people, 'train')
 
-    model = MultiOutputModel(device, n_age_cat=DPAC_ATT_CAT_COUNT['age'],
-                             n_gender_cat=DPAC_ATT_CAT_COUNT['gender'], n_emotion_cat=DPAC_ATT_CAT_COUNT['emotion'])
+    model = MultiOutputModel(device, n_age_cat=IOG_ATT_CAT_COUNT['age'],
+                             n_gender_cat=IOG_ATT_CAT_COUNT['gender'])
 
     model.to(device)
-    loss = MultiTaskLoss_DPAC()
+    loss = MultiTaskLoss_IOG()
 
     # TODO: check this later
     clip_value = 10
@@ -66,7 +65,7 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
     # scheduler_plateau = torch.optim.lr_scheduler.ReduceLROnPlateau(
     #     optimizer, 'max', patience=20)
     # TODO: Do you want to make dataset configurable
-    dataset = 'dpac'
+    dataset = 'iog'
     cp_dir_name = 'cp_{}_{}_{}'.format(dataset, ob_face_region, ob_people)
 
     cp_save_dir = os.path.join(cp_dir_name)
@@ -82,7 +81,6 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
         running_loss = 0
         running_loss_age = 0
         running_loss_gender = 0
-        running_loss_emotion = 0
 
         print("--------------- Current Epoch: {} / {} --------------------".format(epoch, num_epochs))
         print("Current Learning Rate: {}".format(
@@ -104,7 +102,6 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
             running_loss += loss_train
             running_loss_age += losses_train['age']/batch_len
             running_loss_gender += losses_train['gender']/batch_len
-            running_loss_emotion += losses_train['emotion']/batch_len
 
             optimizer.zero_grad()
             loss_train.backward()
@@ -112,11 +109,10 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
 
         print("Running loss age: {}".format(running_loss_age))
         print("Running loss gender: {}".format(running_loss_gender))
-        print("Running loss emotion: {}".format(running_loss_emotion))
 
         
         
-        if epoch > 20:
+        if epoch > 14:
             print("-------------Saving the Checkpoint-----------------------")
             model_checkpoint_save(model, cp_dir_name, epoch)
 
@@ -152,7 +148,7 @@ if __name__ == "__main__":
                         help='GPU device to train the model on')
 
     # TODO
-    # parser.add_argument('--dataset', type=str, default="dpac")
+    # parser.add_argument('--dataset', type=str, default="iog")
 
     args = parser.parse_args()
 
