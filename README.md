@@ -38,7 +38,7 @@ This repository is the official implementation of the Context-guided Human Attri
 We conducted experiments under:
 
 - PyTorch: 1.7.1
-- Python: 3.6
+- Python: 3.6.9
 
 To install requirements:
 
