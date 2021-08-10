@@ -19,13 +19,17 @@ torch.cuda.manual_seed(1)
 
 def model_checkpoint_save(model, name, epoch):
     '''
+    Args:
+        model (MultiOutputModel)
+        name (str): directory name to save the checkpoint in 
+        epoch (int): file name of the checkpoint
     '''
     f = os.path.join(name, '{}.pth'.format(epoch))
     torch.save(model.state_dict(), f)
     print('Saved checkpoint:', f)
 
 
-def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=None, ob_people=None, gpu_device=0):
+def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region, ob_people, gpu_device):
     '''
     Args:
         num_epochs (int):
@@ -41,7 +45,7 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
                           if torch.cuda.is_available() else "cpu")
     print("cuda is_available:", torch.cuda.is_available())
     print("cuda current_device", torch.cuda.current_device())
-    
+
     train_dataloader = load_data(
         batch_size, ob_face_region, ob_people, 'train')
 
@@ -72,7 +76,6 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
     cp_save_dir = os.path.join(cp_dir_name)
     if not os.path.isdir(cp_save_dir):
         os.makedirs(cp_dir_name)
-
 
     print("Total model parameters: {}".format(sum(p.numel()
                                                   for p in model.parameters() if p.requires_grad)))
@@ -114,8 +117,6 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
         print("Running loss gender: {}".format(running_loss_gender))
         print("Running loss emotion: {}".format(running_loss_emotion))
 
-        
-        
         if epoch > 20:
             print("-------------Saving the Checkpoint-----------------------")
             model_checkpoint_save(model, cp_dir_name, epoch)
@@ -126,35 +127,24 @@ def train(num_epochs, batch_size, learning_rate, weight_decay, ob_face_region=No
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    # num_epochs
     parser.add_argument('--num_epochs', type=int, default=40,
                         help="number of epochs to train for")
-
-    # batch_size
     parser.add_argument('--batch_size', type=int,
                         default=16, help='batch size')
-
-    # learning rate
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate')
-
-    # weight decay
     parser.add_argument('--weight_decay', type=float,
-                        default=5e-4, help='value between [0, 1]')
+                        default=5e-4, help='weight decay -- value between [0, 1]')
 
-    # obfuscated face region
-    parser.add_argument('--ob_face_region', type=str, help='face region to obfuscated')
-
-    # obfuscated people
-    parser.add_argument('--ob_people', type=str, help='TO: Target obfuscated, AO: All obfuscated')
-
-    # gpu device to use
+    parser.add_argument('--ob_face_region', type=str,
+                        default=None, help='face region to obfuscated')
+    parser.add_argument('--ob_people', type=str, default=None,
+                        help='TO: Target obfuscated, AO: All obfuscated')
     parser.add_argument('--gpu_device', type=int, default=0,
                         help='GPU device to train the model on')
 
-    # TODO
+    # TODO: Add support for the EMOTION, IoG and CAER-S datasets
     # parser.add_argument('--dataset', type=str, default="dpac")
 
     args = parser.parse_args()
-
     train(num_epochs=args.num_epochs, batch_size=args.batch_size, learning_rate=args.lr, weight_decay=args.weight_decay,
           ob_face_region=args.ob_face_region, ob_people=args.ob_people, gpu_device=args.gpu_device)

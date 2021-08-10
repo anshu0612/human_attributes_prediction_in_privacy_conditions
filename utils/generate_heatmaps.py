@@ -17,8 +17,6 @@ LANDMARKS_THRESHOLD = 0.2
 
 
 def _center_gaussian_heatmap(img_height, img_width, c_x, c_y, variance):
-    '''
-    '''
     gaussian_map = np.zeros((img_height, img_width))
     for x_p in range(img_width):
         for y_p in range(img_height):
@@ -30,8 +28,6 @@ def _center_gaussian_heatmap(img_height, img_width, c_x, c_y, variance):
 
 
 def _generate_pose_guided_heatmaps(cropped_targets_imgs_path, pose_data, save_path):
-    '''
-    '''
     for img in os.listdir(cropped_targets_imgs_path):
         img_ = Image.open(os.path.join(cropped_targets_imgs_path, img))
         img_np = np.array(img_)
@@ -90,4 +86,5 @@ if __name__ == "__main__":
     with open(args.pose_data_path) as data_file:
         pose_data = json.load(data_file)
 
-    _generate_pose_guided_heatmaps(cropped_targets_imgs_path, pose_data, save_path)
+    _generate_pose_guided_heatmaps(
+        cropped_targets_imgs_path, pose_data, save_path)

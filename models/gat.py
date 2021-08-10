@@ -118,7 +118,8 @@ class VisualRelationshipStream(nn.Module):
         _batch = context.size()[0]
 
         context = self.context_pool(context)
-        patched_context = self._generate_image_pataches(self._patch_size, context)
+        patched_context = self._generate_image_pataches(
+            self._patch_size, context)
 
         target = self.target_feat(target)
         target = target.view(_batch, -1)

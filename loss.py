@@ -1,5 +1,6 @@
 from torch import nn
 
+
 class MultiTaskLoss_DPAC(nn.Module):
     def __init__(self):
         super(MultiTaskLoss_DPAC, self).__init__()
@@ -20,7 +21,8 @@ class MultiTaskLoss_EMOTIC(nn.Module):
     def __init__(self):
         super(MultiTaskLoss_EMOTIC, self).__init__()
         self.ce_loss = nn.CrossEntropyLoss()
-        self.emotion_criterion = nn.MultiLabelSoftMarginLoss(reduction='mean') # for multi-label emotion
+        self.emotion_criterion = nn.MultiLabelSoftMarginLoss(
+            reduction='mean')  # for multi-label emotion
 
     def forward(self, net_output, ground_truth):
         gender_loss = self.ce_loss(

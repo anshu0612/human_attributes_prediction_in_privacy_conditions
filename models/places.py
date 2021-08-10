@@ -42,15 +42,13 @@ def _load_and_save_places_model():
                   v in checkpoint['state_dict'].items()}
     context_model.load_state_dict(state_dict)
     context_model.eval()
-    # context_model.to(device)
 
     torch.save(context_model, os.path.join(model_path, 'res_context' + '.pth'))
 
     print('completed preparing context model')
 
 
-# TODO: can remove the device requirement if not needed
-def get_places_model(device):
+def get_places_model():
 
     if not os.path.exists('places'):
         _load_and_save_places_model()

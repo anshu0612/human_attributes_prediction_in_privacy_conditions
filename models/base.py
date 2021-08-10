@@ -21,9 +21,10 @@ class MultiOutputModel(nn.Module):
         self.objects_feat_extractor.fc = nn.Linear(512, 256)
 
         # Event Stream
-        model_context = get_places_model(device)
+        model_context = get_places_model()
 
-        self.event_feat_extractor = nn.Sequential(*(list(model_context.children())[:-1]))
+        self.event_feat_extractor = nn.Sequential(
+            *(list(model_context.children())[:-1]))
         self.num_places_scene = list(model_context.children())[-1].in_features
 
         # Relationship Stream

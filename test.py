@@ -1,6 +1,6 @@
-import torch
 import warnings
 import argparse
+import torch
 import numpy as np
 from rich import print
 
@@ -13,8 +13,6 @@ from sklearn.metrics import precision_score, f1_score, recall_score, accuracy_sc
 
 
 def _net_output_to_predictions(output):
-    '''
-    '''
     _, predicted_age = output['age'].cpu().max(1)
     _, predicted_gender = output['gender'].cpu().max(1)
     _, predicted_emotion = output['emotion'].cpu().max(1)
@@ -22,15 +20,11 @@ def _net_output_to_predictions(output):
 
 
 def _model_checkpoint_load(model, name):
-    '''
-    '''
     print('Restoring checkpoint: {}'.format(name))
     model.load_state_dict(torch.load(name, map_location='cpu'))
 
 
 def _calculate_metrics(target, output):
-    '''
-    '''
     predicted_age = output['age']
     gt_age = target['age']
 
@@ -80,8 +74,6 @@ def _calculate_metrics(target, output):
 
 
 def test(checkpoint=None, gpu_device=0):
-    '''
-    '''
     device = torch.device("cuda:" + str(gpu_device)
                           if torch.cuda.is_available() else "cpu")
     # loss = MultiTaskLoss_DPAC()
@@ -148,7 +140,7 @@ if __name__ == "__main__":
     # print("cuda memory_reserved:", torch.cuda.memory_reserved())
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cp_path', type=str, default="/home/a/anshu/context-aware-attributes-prediction/cp_dpac_face_T/29.pth",
+    parser.add_argument('--cp_path', type=str, default="cp_dpac_face_T/29.pth",
                         help='Checkpoint to test on', required=True)
     # gpu device to use
     parser.add_argument('--gpu_device', type=int,

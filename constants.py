@@ -3,9 +3,9 @@ NORM_STD = [0.229, 0.224, 0.225]
 IMG_HEIGHT = 400
 IMG_WIDTH = 400
 
-# DPAC Dataset 
+# DPAC Dataset
 DPAC_ATT_CAT_COUNT = {
-    "emotion": 7, 
+    "emotion": 7,
     "age": 5,
     "gender": 2
 }
@@ -39,23 +39,17 @@ IOG_ATT_CAT_COUNT = {
     "gender": 2
 }
 
-# EMOTIC Dataset
-EMOTIC_ATT_CAT_COUNT = {
-    "emotion": 26, 
-    "age": 3,
-    "gender": 2
-}
-EMOTIC_AGE_CAT = ['Kid', 'Teenager', 'Adult']
+# EMOTIC Datasetrieval and Search Engi
 EMOTIC_GENDER_CAT = ['Male', 'Female']
 EMOTIC_EMOTION_CAT = ['Affection', 'Anger', 'Annoyance', 'Anticipation', 'Aversion',
-            'Confidence', 'Disapproval', 'Disconnection', 'Disquietment',
-            'Doubt/Confusion', 'Embarrassment', 'Engagement', 'Esteem',
-            'Excitement', 'Fatigue', 'Fear', 'Happiness', 'Pain', 'Peace',
-            'Pleasure', 'Sadness', 'Sensitivity', 'Suffering', 'Surprise',
-            'Sympathy', 'Yearning']
+                      'Confidence', 'Disapproval', 'Disconnection', 'Disquietment',
+                      'Doubt/Confusion', 'Embarrassment', 'Engagement', 'Esteem',
+                      'Excitement', 'Fatigue', 'Fear', 'Happiness', 'Pain', 'Peace',
+                      'Pleasure', 'Sadness', 'Sensitivity', 'Suffering', 'Surprise',
+                      'Sympathy', 'Yearning']
 
 
-# CAER Dataset 
+# CAER Dataset
 CAER_ATT_CAT_COUNT = {
     "emotion": 5
 }
