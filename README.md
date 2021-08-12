@@ -35,7 +35,7 @@ This repository is the official implementation of the Context-guided Human Attri
 
 ### Dependencies
 
-We conducted experiments under:
+The experiments have been conducted under:
 
 - PyTorch: 1.7.1
 - Python: 3.6.9
