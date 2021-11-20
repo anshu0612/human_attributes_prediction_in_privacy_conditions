@@ -157,9 +157,23 @@ python3 test.py --cp_path "/cp_DPAC_face_AO/29.pth"
 | cp_path | Set the path to the checkpoint | - |
 | gpu_device | Set the GPU device to train the model on | 0 |
 
+
+## Citation
+
+If this repository was useful in your research, please cite our paper:
+```bibtex
+@inproceedings{singh2021human,
+  title={Human Attributes Prediction under Privacy-preserving Conditions},
+  author={Singh, Anshu and Fan, Shaojing and Kankanhalli, Mohan},
+  booktitle={Proceedings of the 29th ACM International Conference on Multimedia},
+  pages={4698--4706},
+  year={2021}
+}
+```
+
 ## Contact
 
-If you have any questions, feel free to open an issue or directly contact me via: `anshu@nus.edu.sg OR anshu@comp.nus.edu.sg`
+If you have any questions, feel free to open an issue or directly contact me via: `anshu@comp.nus.edu.sg`
 
 ## References
 
