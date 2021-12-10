@@ -2,7 +2,7 @@
 
 This repository is the official implementation of the Context-guided Human Attributes Prediction Network (CHAPNet) introduced in **Human Attributes Prediction Under Privacy-preserving Conditions**.
 
-[Main paper](https://ncript-webpage.s3.ap-southeast-1.amazonaws.com/Human_attributes_prediction_under_privacy_preserving_conditions.pdf)  |    [Supplementary material](https://ncript-webpage.s3.ap-southeast-1.amazonaws.com/Supplementary_human_attributes_prediction_under_privacy_preserving_conditions.pdf)  |  [Project page](https://ncript.comp.nus.edu.sg/site/human-attributes-privacy/#/) | [Related blog](https://randomizedcreep.medium.com/facing-ais-winning-facade-with-face-images-e2b46262b507)
+[Main paper](https://dl.acm.org/doi/pdf/10.1145/3474085.3475687)  | [Supplementary material](https://ncript-webpage.s3.ap-southeast-1.amazonaws.com/Supplementary_human_attributes_prediction_under_privacy_preserving_conditions.pdf)  |  [Project page](https://ncript.comp.nus.edu.sg/site/human-attributes-privacy/#/) | [Related blog](https://randomizedcreep.medium.com/facing-ais-winning-facade-with-face-images-e2b46262b507)
 
 --------------------------------------------------------------------------------
 
